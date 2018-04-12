@@ -12,7 +12,14 @@ def ID3(examples, default):
     if len(examples) == 0:
         return default
     else:
-        return 1
+        choose_attrib(examples)
+
+def choose_attrib(examples):
+    '''
+    Returns the best attribute to split on.
+    '''
+    num_attrib = len(examples[0]-1)
+    print num_attrib
 
 def prune(node, examples):
     '''
