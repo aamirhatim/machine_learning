@@ -3,10 +3,13 @@ from parse import parse
 import ID3
 
 def main():
-    e = parse("house_votes_84.data")
-    print len(e)
-    f = ID3.ID3(e, 0)
-    print f
+    # e = parse("house_votes_84.data")
+    # print len(e)
+    # f = ID3.ID3(e, 0)
+    # print f
+
+    h = ID3.H(3, 3, 6)
+    print h
 
 if __name__ == "__main__":
     main()
