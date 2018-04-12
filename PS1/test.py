@@ -8,7 +8,7 @@ def main():
     # f = ID3.ID3(e, 0)
     # print f
 
-    h = ID3.H(6, 0, 6)
+    h = ID3.H(4, 2, 6)
     print h
 
 if __name__ == "__main__":

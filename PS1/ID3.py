@@ -32,12 +32,6 @@ def evaluate(node, example):
     Takes in a tree and one example.  Returns the Class value that the tree
     assigns to the example.
     '''
-def log2(val, base):
-    '''
-    Returns the log (base 2) of val
-    '''
-    x = math.log(val)/math.log(2)
-    return x
 
 def H(pos, neg, s):
     '''
@@ -48,7 +42,8 @@ def H(pos, neg, s):
     if pos == 0 or neg == 0:
         return 0
 
+    log2 = lambda x: math.log(x)/math.log(2)
     p = float(pos)/s
     n = float(neg)/s
-    h = -p*log2(p, 2) - n*log2(n, 2)
+    h = -p*log2(p) - n*log2(n)
     return h
