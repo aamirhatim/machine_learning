@@ -32,13 +32,23 @@ def evaluate(node, example):
     Takes in a tree and one example.  Returns the Class value that the tree
     assigns to the example.
     '''
+def log2(val, base):
+    '''
+    Returns the log (base 2) of val
+    '''
+    x = math.log(val)/math.log(2)
+    return x
 
 def H(pos, neg, s):
     '''
     Entropy calculator. Takes in number of positive samples (pos), number of negative
     samples (neg), and total number of samples (s). Returns entropy of sample set.
     '''
-    p = float(pos/s)
-    n = float(neg/s)
-    h = -p*math.log(p) - n*math.log(n)
+    # If the sample set is pure, return a 0 for zero entropy
+    if pos == 0 or neg == 0:
+        return 0
+
+    p = float(pos)/s
+    n = float(neg)/s
+    h = -p*log2(p, 2) - n*log2(n, 2)
     return h
