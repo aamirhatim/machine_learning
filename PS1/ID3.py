@@ -21,17 +21,13 @@ def ID3(examples, default):
                 classes[key['Class']] = 1
             else:
                 classes[key['Class']] += 1
-        # print party
 
         # Initialize Node
         n = Node()
 
         # Calculate entropy of current distribution
         total = len(examples)
-        n.entropy = H(classes, total)
-        print n.entropy
-
-
+        n.h = H(classes, total)
 
         # Get list of attributes
         attributes = examples[0].keys()
