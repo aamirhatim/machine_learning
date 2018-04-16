@@ -15,12 +15,7 @@ def ID3(examples, default):
     # Else choose the best attribute
     else:
         # Create dictionary of classes and count how many times they show up
-        classes = {}
-        for key in iter(examples):
-            if key['Class'] not in classes:
-                classes[key['Class']] = 1
-            else:
-                classes[key['Class']] += 1
+        classes = get_classifiers(examples, 'Class')
 
         # Initialize Node
         n = Node()
@@ -33,6 +28,15 @@ def ID3(examples, default):
         attributes = examples[0].keys()
         attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
         choose_attrib(examples, attributes)
+
+def get_classifiers(examples, class_name):
+    classifiers = {}
+    for key in iter(examples):
+        if key[class_name] not in classifiers:
+            classifiers[key[class_name]] = 1
+        else:
+            classifiers[key[class_name]] += 1
+    return classifiers
 
 def H(classes, total):
     '''
@@ -51,13 +55,7 @@ def choose_attrib(examples, attributes):
     Returns the best attribute to split on.
     '''
     # Calculate entropy for each split and the info gain
-    answers = {}
-    for key in iter(examples):
-        if key[attributes[0]] not in answers:
-            answers[key[attributes[0]]] = 1
-        else:
-            answers[key[attributes[0]]] += 1
-    print answers
+    classifiers = get_classifiers(examples, attributes[0])
 
 def prune(node, examples):
     '''
