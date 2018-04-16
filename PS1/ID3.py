@@ -55,7 +55,9 @@ def choose_attrib(examples, attributes):
     Returns the best attribute to split on.
     '''
     # Calculate entropy for each split and the info gain
-    classifiers = get_classifiers(examples, attributes[0])
+    for a in attributes:
+        classifiers = get_classifiers(examples, a)
+        print classifiers
 
 def prune(node, examples):
     '''
