@@ -37,8 +37,15 @@ def ID3(examples, default):
         attributes = examples[0].keys()
         attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
         # choose_attrib(examples, attributes)
+        a = {}
         for i in classes['republican']:
-            print examples[i][attributes[0]]
+            if examples[i][attributes[0]] not in a:
+                a[examples[i][attributes[0]]] = []
+                a[examples[i][attributes[0]]].append(i)
+            else:
+                a[examples[i][attributes[0]]].append(i)
+
+        print a
 
 def get_classifiers(examples, class_name):
     classifiers = {}
