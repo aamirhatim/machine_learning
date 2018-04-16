@@ -1,5 +1,6 @@
 from node import Node
 import math
+import random
 
 def ID3(examples, default):
     '''
@@ -11,15 +12,57 @@ def ID3(examples, default):
     # Return default if example set is empty
     if len(examples) == 0:
         return default
+    # Else choose the best attribute
     else:
-        choose_attrib(examples)
+        # Create dictionary of classes and count how many times they show up
+        classes = {}
+        for key in iter(examples):
+            if key['Class'] not in classes:
+                classes[key['Class']] = 1
+            else:
+                classes[key['Class']] += 1
+        # print party
 
-def choose_attrib(examples):
+        # Initialize Node
+        n = Node()
+
+        # Calculate entropy of current distribution
+        total = len(examples)
+        n.entropy = H(classes, total)
+        print n.entropy
+
+
+
+        # Get list of attributes
+        attributes = examples[0].keys()
+        # choose_attrib(examples, attributes)
+
+def H(classes, total):
+    '''
+    Entropy calculator. Reads number of classes and computes individual entropy
+    for each class. Returns the sum of all entropies.
+    '''
+    e = 0
+    log2 = lambda x: math.log(x)/math.log(2)
+    for num in classes.itervalues():
+        val = float(num)/total
+        e += -val*log2(val)
+    return e
+
+def choose_attrib(examples, attributes):
     '''
     Returns the best attribute to split on.
     '''
-    num_attrib = len(examples[0]-1)
-    print num_attrib
+    # Calculate entropy for each attribute for all samples
+    node = Node()
+    print node.label
+    # for key in iter(examples):
+    #     print key[attributes[2]], key['Class']
+    # for i in iter(attributes):
+    #     for key in examples:
+
+    # num_attrib = len(examples[0].keys()) - 1
+    # print num_attrib
 
 def prune(node, examples):
     '''
@@ -39,18 +82,3 @@ def evaluate(node, example):
     Takes in a tree and one example.  Returns the Class value that the tree
     assigns to the example.
     '''
-
-def H(pos, neg, s):
-    '''
-    Entropy calculator. Takes in number of positive samples (pos), number of negative
-    samples (neg), and total number of samples (s). Returns entropy of sample set.
-    '''
-    # If the sample set is pure, return a 0 for zero entropy
-    if pos == 0 or neg == 0:
-        return 0
-
-    log2 = lambda x: math.log(x)/math.log(2)
-    p = float(pos)/s
-    n = float(neg)/s
-    h = -p*log2(p) - n*log2(n)
-    return h
