@@ -31,6 +31,7 @@ def ID3(examples, default):
 
         # Get list of attributes and choose the best one to split on
         attributes = examples[0].keys()
+        attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
         choose_attrib(examples, attributes)
 
 def H(classes, total):
@@ -50,8 +51,13 @@ def choose_attrib(examples, attributes):
     Returns the best attribute to split on.
     '''
     # Calculate entropy for each split and the info gain
-    for x in iter(examples):
-        print x
+    answers = {}
+    for key in iter(examples):
+        if key[attributes[0]] not in answers:
+            answers[key[attributes[0]]] = 1
+        else:
+            answers[key[attributes[0]]] += 1
+    print answers
 
 def prune(node, examples):
     '''
