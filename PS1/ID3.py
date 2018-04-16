@@ -15,22 +15,36 @@ def ID3(examples, default):
     # Else choose the best attribute
     else:
         # Create dictionary of classes and count how many times they show up
-        classes = get_classifiers(examples, 'Class')
+        # classes = get_classifiers(examples, 'Class')
+        classes = {}
+        for i in range(len(examples)):
+            if examples[i]['Class'] not in classes:
+                classes[examples[i]['Class']] = []
+                classes[examples[i]['Class']].append(i)
+            else:
+                classes[examples[i]['Class']].append(i)
+
+        # print len(classes['democrat'])
+
 
         # Initialize Node
         n = Node()
 
         # Calculate entropy of current distribution (Hprior)
-        n.h = H(classes, len(examples))
+        # n.h = H(classes, len(examples))
 
         # Get list of attributes and choose the best one to split on
         attributes = examples[0].keys()
         attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
-        choose_attrib(examples, attributes)
+        # choose_attrib(examples, attributes)
+        for i in classes['republican']:
+            print examples[i][attributes[0]]
 
 def get_classifiers(examples, class_name):
     classifiers = {}
+    i = 0
     for key in iter(examples):
+        # print examples.index(key)
         if key[class_name] not in classifiers:
             classifiers[key[class_name]] = 1
         else:
@@ -49,9 +63,6 @@ def H(classes, total):
         e += -val*log2(val)
     return e
 
-# def H2(classes, total):
-
-
 def choose_attrib(examples, attributes):
     '''
     Returns the best attribute to split on.
@@ -60,9 +71,8 @@ def choose_attrib(examples, attributes):
     # Calculate entropy for each split and the info gain
     for a in attributes:
         classifiers = get_classifiers(examples, a)      # Determine classifiers in sample set
+
         h = H(classifiers, len(examples))               # Calculate entropy
-        # g = 
-        print h
 
 def prune(node, examples):
     '''
