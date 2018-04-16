@@ -1,6 +1,7 @@
 from node import Node
 import math
 import random
+import numpy as np
 
 def ID3(examples, default):
     '''
@@ -24,7 +25,7 @@ def ID3(examples, default):
             else:
                 classes[examples[i]['Class']].append(i)
 
-        # print len(classes['democrat'])
+        # print classes['republican']
 
 
         # Initialize Node
@@ -36,16 +37,89 @@ def ID3(examples, default):
         # Get list of attributes and choose the best one to split on
         attributes = examples[0].keys()
         attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
-        # choose_attrib(examples, attributes)
+
+        E2 = {}
         a = {}
-        for i in classes['republican']:
+        for i in range(len(examples)):
             if examples[i][attributes[0]] not in a:
                 a[examples[i][attributes[0]]] = []
                 a[examples[i][attributes[0]]].append(i)
             else:
                 a[examples[i][attributes[0]]].append(i)
+        print attributes[0]
 
-        print a
+        E = {}
+        P = {}
+        for answer in a.iterkeys():
+            # print answer
+            d = {}
+            total = 0
+            for key in classes.iterkeys():
+                # print key
+                u = [value for value in classes[key] if value in a[answer]]
+                # print u
+                # print len(u)
+                d[key] = len(u)
+                total += len(u)
+            # print d
+            # print total
+
+            # Calculate entropy
+            h = H(d, total)
+            # print h
+            E[answer] = h
+
+            # Calculate probability for each vote
+            p = float(total)/len(examples)
+            # print p
+
+            P[answer] = p
+            # print "\n"
+        print E
+        print P
+
+        # Calculate entropy of two attributes
+        H2(E, P)
+        # h2 = H2(E, P)
+        # print h2
+
+        # u = [value for value in classes['republican'] if value in a['y']]
+        # u2 = [value for value in classes['democrat'] if value in a['y']]
+
+
+        # choose_attrib(examples, attributes)
+        # a = {}
+        # for i in classes['democrat']:
+        #     if examples[i][attributes[0]] not in a:
+        #         a[examples[i][attributes[0]]] = []
+        #         a[examples[i][attributes[0]]].append(i)
+        #     else:
+        #         a[examples[i][attributes[0]]].append(i)
+        # print a,"\n"
+##################################################################3
+        # for j in attributes:
+        #     print j
+        #     split = {}
+        #     for key, val in classes.iteritems():
+        #         a = {}
+        #         for i in val:
+        #             if examples[i][j] not in a:
+        #                 a[examples[i][j]] = 1
+        #                 # a[examples[i][attributes[0]]].append(i)
+        #             else:
+        #                 a[examples[i][j]] += 1
+        #                 # a[examples[i][attributes[0]]].append(i)
+        #             # print i
+        #         split[key] = a
+        #         # print c
+        #
+        #     for i in split.itervalues():
+        #         for j in i.iterkeys():
+        #             print j
+        #         print i
+        #
+        #
+        #     print "\n"
 
 def get_classifiers(examples, class_name):
     classifiers = {}
@@ -69,6 +143,12 @@ def H(classes, total):
         val = float(num)/total
         e += -val*log2(val)
     return e
+
+def H2(entropy, probability):
+    e = 0
+    for key in entropy.iterkeys():
+        print key
+        print entropy[key] * probability[key]
 
 def choose_attrib(examples, attributes):
     '''
