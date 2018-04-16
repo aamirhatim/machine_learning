@@ -49,14 +49,19 @@ def H(classes, total):
         e += -val*log2(val)
     return e
 
+# def H2(classes, total):
+
+
 def choose_attrib(examples, attributes):
     '''
     Returns the best attribute to split on.
     '''
+    gain = 0                                            # Initialize info gain
     # Calculate entropy for each split and the info gain
     for a in attributes:
-        classifiers = get_classifiers(examples, a)
-        h = H(classifiers, len(examples))
+        classifiers = get_classifiers(examples, a)      # Determine classifiers in sample set
+        h = H(classifiers, len(examples))               # Calculate entropy
+        # g = 
         print h
 
 def prune(node, examples):
