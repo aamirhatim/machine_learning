@@ -25,13 +25,13 @@ def ID3(examples, default):
         # Initialize Node
         n = Node()
 
-        # Calculate entropy of current distribution
+        # Calculate entropy of current distribution (Hprior)
         total = len(examples)
         n.h = H(classes, total)
 
-        # Get list of attributes
+        # Get list of attributes and choose the best one to split on
         attributes = examples[0].keys()
-        # choose_attrib(examples, attributes)
+        choose_attrib(examples, attributes)
 
 def H(classes, total):
     '''
@@ -49,16 +49,9 @@ def choose_attrib(examples, attributes):
     '''
     Returns the best attribute to split on.
     '''
-    # Calculate entropy for each attribute for all samples
-    node = Node()
-    print node.label
-    # for key in iter(examples):
-    #     print key[attributes[2]], key['Class']
-    # for i in iter(attributes):
-    #     for key in examples:
-
-    # num_attrib = len(examples[0].keys()) - 1
-    # print num_attrib
+    # Calculate entropy for each split and the info gain
+    for x in iter(examples):
+        print x
 
 def prune(node, examples):
     '''
