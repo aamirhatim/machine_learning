@@ -14,32 +14,30 @@ def ID3(examples, default):
     if len(examples) == 0:
         return tree(default)
 
-    # Get classification of all samples
+    # Otherwise, get classification of all samples
     classification = []
     for i in examples:
         if i['Class'] not in classification:
             classification.append(i['Class'])
 
-    if len(classification) == 1:
+    if len(classification) == 1:                        # Return a tree with label mode(examples) if only one class
         return tree(mode(examples))
-    # Else choose the best attribute
-    else:
-    # 1. Find best attribute to split on
-        best = choose_attribute(examples)
-        # print best
 
-    # 2. Create new tree with root at best attribute
+    # Else, choose the best attribute to split data on
+    else:
+        best = choose_attribute(examples)
+
+        # Create new tree with root at best attribute
         t = tree(best[0])                               # Create tree with label as best attribute
         for branch in best[1].iteritems():
             examplesi = []                              # Reset examplesi for every branch
             for i in branch[1]:
                 examplesi.append(examples[i])           # Create new subset of data samples for next iteration of ID3
 
-            # Run ID3 algorithm on subset
-            subtree = ID3(examplesi, mode(examples))
+            subtree = ID3(examplesi, mode(examples))    # Run ID3 algorithm on data subset
+            t.children[branch[0]] = subtree             # Add branch to parent Node
 
-            # Add branch to n Node
-            # t.children[branch[0]] = subtree
+    return t
 
 def tree(label):
     '''
@@ -78,7 +76,8 @@ def H(classes, total):
     log2 = lambda x: math.log(x)/math.log(2)
     for num in classes.itervalues():
         val = float(num)/total
-        e += -val*log2(val)
+        if not val == 0:
+            e += -val*log2(val)
     return e
 
 def H2(entropy, probability):
@@ -140,7 +139,8 @@ def choose_attribute(examples):
                 u = [value for value in classes[key] if value in att[classifier]]
                 c[key] = len(u)                         # Add size of intersect to dictionary
                 total += len(u)                         # Keep track of total number of samples in ea h Class
-
+            # print att
+            # print classifier
             h = H(c, total)                             # Calculate entropy of c{}
             E[classifier] = h                           # Add entropy to dictionary E{} for the given attribute
 

@@ -5,7 +5,7 @@ import ID3
 def main():
     e = parse("house_votes_84.data")
     # print len(e)
-    f = ID3.ID3(e, 0)
+    f = ID3.ID3(e, 'empty')
     # print len(e[0].keys())-1
 
     # h = ID3.H(4, 2, 6)
