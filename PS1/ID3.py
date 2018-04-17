@@ -42,7 +42,8 @@ def ID3(examples, default):
         attributes = examples[0].keys()
         attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
 
-        choose_attrib(examples, attributes, classes, hprior)
+        split = choose_attrib(examples, attributes, classes, hprior)
+        print split
 
 def H(classes, total):
     '''
@@ -92,7 +93,7 @@ def choose_attrib(examples, attributes, classes, hprior):
             for key in classes.iterkeys():              # Find intersect between classes{} and att{}
                 u = [value for value in classes[key] if value in att[classifier]]
                 c[key] = len(u)                         # Add size of intersect to dictionary
-                total += len(u)                         # Keep track of total number of samples
+                total += len(u)                         # Keep track of total number of samples in ea h Class
 
             h = H(c, total)                             # Calculate entropy of c{}
             E[classifier] = h                           # Add entropy to dictionary E{} for the given attribute
@@ -111,7 +112,8 @@ def choose_attrib(examples, attributes, classes, hprior):
         if G[key] == max_gain:                          # Look for attribute that has matching max_gain value
             Gmax[key] = max_gain                        # Add key/value pair to single element dictionary Gmax{}
             break
-    print Gmax
+
+    return Gmax
 
 def prune(node, examples):
     '''
