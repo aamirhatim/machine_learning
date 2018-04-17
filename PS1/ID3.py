@@ -16,29 +16,49 @@ def ID3(examples, default):
     # Else choose the best attribute
     else:
     # 1. Find best attribute to split on
-        classes = {}                                    # Create dictionary of classes and store sample indexes
-        for i in range(len(examples)):
-            if examples[i]['Class'] not in classes:
-                classes[examples[i]['Class']] = []      # Add new key (Class) if it doesn't already exist
-                classes[examples[i]['Class']].append(i) # Append value to list of sample indexes
-            else:
-                classes[examples[i]['Class']].append(i)
-
-        data = {}                                       # Create dictionary that has number of samples in each Class
-        for key in classes.iterkeys():
-            data[key] = len(classes[key])
-        hprior = H(data, len(examples))                 # Calculate entropy of current distribution (Hprior)
-
-        attributes = examples[0].keys()                 # Create array of attributes using a data sample
-        attributes.pop(len(attributes) - 1)             # Remove last attribute (the Class)
-
-        best = choose_attrib(examples, attributes, classes, hprior)
+        best = choose_attribute(examples)
+        # print best
 
     # 2. Create new tree with root at best attribute
-        n = Node()                                      # Initialize node
-        n.label = best[0]                               # Set node label to best attribute
-        for branch in best[1]:
-            print branch
+        t = tree(best[0])                               # Create tree with label as best attribute
+        for branch in best[1].iteritems():
+            examplesi = []                              # Reset examplesi for every branch
+            for i in branch[1]:
+                examplesi.append(examples[i])           # Create new subset of data samples for next iteration of ID3
+
+            # Run ID3 algorithm on subset
+            # subtree = ID3(examplesi, mode(examples))
+
+            # Add branch to n Node
+            # t.children[branch[0]] = subtree
+
+def tree(label):
+    '''
+    Creates a new tree with a given label.
+    '''
+    node = Node()                                       # Create instance of Node
+    node.label = label                                  # Add label to new node
+    return node
+
+def mode(examples):
+    '''
+    Returns most common Class in the set of examples.
+    '''
+    classes = {}                                        # Create dictionary for classes
+    for i in examples:                                  # Search for classes in data set and count their frequency
+        if i['Class'] not in classes:
+            classes[i['Class']] = 1
+        else:
+            classes[i['Class']] += 1
+
+    class_mode = 0
+    class_label = ''
+    for label in classes:                               # Look for class that occurs the most and return its label
+        if classes[label] > class_mode:
+            class_mode = classes[label]
+            class_label = label
+
+    return class_label
 
 def H(classes, total):
     '''
@@ -58,10 +78,12 @@ def H2(entropy, probability):
         e += entropy[key] * probability[key]
     return e
 
-def choose_attrib(examples, attributes, classes, hprior):
+def choose_attribute(examples):
     '''
     Returns the best attribute to split on.
     '''
+    classes = {}    # Dictionary of all Class values
+    data = {}       # Dictionary of number of samples in each Class
     E = {}          # Single attribute entropies for each classifier
     P = {}          # Probability of classifier
     E2 = {}         # Entropy of two attributes
@@ -71,10 +93,27 @@ def choose_attrib(examples, attributes, classes, hprior):
     branches = {}   # Dictionary of possible branches for each attribute, composed of att{} instances
     c = {}          # Data samples of att{} categorized by Class
 
+    # 1. Create dictionary of classes and store sample indexes
+    for i in range(len(examples)):
+        if examples[i]['Class'] not in classes:
+            classes[examples[i]['Class']] = []          # Add new key (Class) if it doesn't already exist
+            classes[examples[i]['Class']].append(i)     # Append value to list of sample indexes
+        else:
+            classes[examples[i]['Class']].append(i)
+
+    # 2. Create dictionary that has number of samples in each Class
+    for key in classes.iterkeys():
+        data[key] = len(classes[key])
+    hprior = H(data, len(examples))                     # Calculate entropy of current distribution (Hprior)
+
+    # 3. Create list of attributes and loop through them all to find the best one
+    attributes = examples[0].keys()                     # Create array of attributes using a data sample
+    attributes.pop(len(attributes) - 1)                 # Remove last attribute (the Class)
+
     for attribute in attributes:
         att = {}                                        # Reset att{} for each attribute loop
 
-    # 1. Create dictionary of all data samples sorted by classifiers
+    # 4. Create dictionary of all data samples sorted by classifiers
         for i in range(len(examples)):
             if examples[i][attribute] not in att:       # Add new classifier if it doesn't already exist
                 att[examples[i][attribute]] = []
@@ -84,7 +123,7 @@ def choose_attrib(examples, attributes, classes, hprior):
 
             branches[attribute] = att                   # Add sorted classifiers to dictionary of branches
 
-    # 2. Sort each att{} key (y/n/?) by Class (democrat/republican)
+    # 5. Sort each att{} key (y/n/?) by Class (democrat/republican)
         for classifier in att.iterkeys():
             c = {}                                      # Reset c{} for each given classifier
             total = 0
@@ -99,12 +138,12 @@ def choose_attrib(examples, attributes, classes, hprior):
             p = float(total)/len(examples)              # Calculate probability for each classifier
             P[classifier] = p                           # Add probability to dictionary P{} for given attribute
 
-    # 3. Find information gain for splitting on the given attribute
+    # 6. Find information gain for splitting on the given attribute
         h2 = H2(E, P)                                   # Calculate entropy of two attributes = SUM(P * E)
         g = hprior - h2                                 # Compute information gain
         G[attribute] = g                                # Add gain to dictionary G{} for given attribute
 
-    # 4. Find attribute with largest gain value
+    # 7. Find attribute with largest gain value
     max_gain = max(G.values())
     for key in G.iterkeys():
         if G[key] == max_gain:                          # Look for attribute that has matching max_gain value
