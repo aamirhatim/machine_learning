@@ -176,3 +176,16 @@ def evaluate(node, example):
     Takes in a tree and one example.  Returns the Class value that the tree
     assigns to the example.
     '''
+    # print example
+    # print node.label
+    # print example[node.label]
+    # print node.children
+    new_node = node.children[example[node.label]]
+    print node.label
+    print example[node.label]
+    print "\n"
+    if len(node.children) == 0:
+        label = node.label
+    else:
+        label = evaluate(new_node, example)
+    return label
