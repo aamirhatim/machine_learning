@@ -37,6 +37,8 @@ def ID3(examples, default):
     # 2. Create new tree with root at best attribute
         n = Node()                                      # Initialize node
         n.label = best[0]                               # Set node label to best attribute
+        for branch in best[1]:
+            print branch
 
 def H(classes, total):
     '''
