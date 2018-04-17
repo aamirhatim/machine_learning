@@ -15,6 +15,7 @@ def ID3(examples, default):
         return default
     # Else choose the best attribute
     else:
+    # 1. Find best attribute to split on
         classes = {}                                    # Create dictionary of classes and store sample indexes
         for i in range(len(examples)):
             if examples[i]['Class'] not in classes:
@@ -31,9 +32,11 @@ def ID3(examples, default):
         attributes = examples[0].keys()                 # Create array of attributes using a data sample
         attributes.pop(len(attributes) - 1)             # Remove last attribute (the Class)
 
-        # Find best attribute to split on
         best = choose_attrib(examples, attributes, classes, hprior)
-        print best
+
+    # 2. Create new tree with root at best attribute
+        n = Node()                                      # Initialize node
+        n.label = best[0]                               # Set node label to best attribute
 
 def H(classes, total):
     '''
@@ -63,6 +66,7 @@ def choose_attrib(examples, attributes, classes, hprior):
     G = {}          # Dictionary of information gain for each attribute
     Gmax = {}       # Attribute with the largest info gain
     att = {}        # Data samples categorized by a given attribute
+    branches = {}   # Dictionary of possible branches for each attribute, composed of att{} instances
     c = {}          # Data samples of att{} categorized by Class
 
     for attribute in attributes:
@@ -75,6 +79,8 @@ def choose_attrib(examples, attributes, classes, hprior):
                 att[examples[i][attribute]].append(i)
             else:                                       # Else append sample index to classifier key
                 att[examples[i][attribute]].append(i)
+
+            branches[attribute] = att                   # Add sorted classifiers to dictionary of branches
 
     # 2. Sort each att{} key (y/n/?) by Class (democrat/republican)
         for classifier in att.iterkeys():
@@ -100,10 +106,7 @@ def choose_attrib(examples, attributes, classes, hprior):
     max_gain = max(G.values())
     for key in G.iterkeys():
         if G[key] == max_gain:                          # Look for attribute that has matching max_gain value
-            Gmax[key] = max_gain                        # Add key/value pair to single element dictionary Gmax{}
-            break
-
-    return Gmax
+            return [key, branches[key]]                 # Return split data samples for the best attribute
 
 def prune(node, examples):
     '''
