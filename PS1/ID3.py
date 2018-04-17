@@ -12,7 +12,14 @@ def ID3(examples, default):
     '''
     # Return default if example set is empty
     if len(examples) == 0:
-        return default
+        return tree(default)
+
+    # Get classification of all samples
+    classification = []
+    for i in examples:
+        if i['Class'] not in classification:
+            classification.append(i['Class'])
+    print classification
     # Else choose the best attribute
     else:
     # 1. Find best attribute to split on
