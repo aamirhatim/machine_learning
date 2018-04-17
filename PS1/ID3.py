@@ -19,7 +19,9 @@ def ID3(examples, default):
     for i in examples:
         if i['Class'] not in classification:
             classification.append(i['Class'])
-    print classification
+
+    if len(classification) == 1:
+        return tree(mode(examples))
     # Else choose the best attribute
     else:
     # 1. Find best attribute to split on
