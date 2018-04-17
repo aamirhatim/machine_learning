@@ -36,7 +36,7 @@ def ID3(examples, default):
                 examplesi.append(examples[i])           # Create new subset of data samples for next iteration of ID3
 
             # Run ID3 algorithm on subset
-            # subtree = ID3(examplesi, mode(examples))
+            subtree = ID3(examplesi, mode(examples))
 
             # Add branch to n Node
             # t.children[branch[0]] = subtree
