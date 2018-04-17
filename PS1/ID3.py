@@ -30,7 +30,6 @@ def ID3(examples, default):
         # print data
         # print classes['republican']
 
-
         # Initialize Node
         n = Node()
 
@@ -43,58 +42,7 @@ def ID3(examples, default):
         attributes = examples[0].keys()
         attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
 
-        E2 = {}
-        a = {}
-        for i in range(len(examples)):
-            if examples[i][attributes[0]] not in a:
-                a[examples[i][attributes[0]]] = []
-                a[examples[i][attributes[0]]].append(i)
-            else:
-                a[examples[i][attributes[0]]].append(i)
-        # print a
-        # print attributes[0]
-
-        E = {}
-        P = {}
-        for answer in a.iterkeys():
-            # print answer
-            d = {}
-            total = 0
-            for key in classes.iterkeys():
-                # print key
-                u = [value for value in classes[key] if value in a[answer]]
-                # print u
-                # print len(u)
-                d[key] = len(u)
-                total += len(u)
-            # print d
-            # print total
-
-            # Calculate entropy
-            # print d
-            h = H(d, total)
-            # print h
-            E[answer] = h
-
-            # Calculate probability for each vote
-            p = float(total)/len(examples)
-            # print p
-
-            P[answer] = p
-            # print "\n"
-        # print "ENTROPY:",E
-        # print "PROBABILITY:",P
-
-        # Calculate entropy of two attributes
-        # H2(E, P)
-        h2 = H2(E, P)
-        # print "ENTROPY:",h2
-
-        # Compute info gain
-        g = hprior - h2
-        # print "GAIN:",g
-
-        choose_attrib(examples, attributes)
+        choose_attrib(examples, attributes, classes, hprior)
 
 def H(classes, total):
     '''
@@ -104,7 +52,6 @@ def H(classes, total):
     e = 0
     log2 = lambda x: math.log(x)/math.log(2)
     for num in classes.itervalues():
-        # print num
         val = float(num)/total
         e += -val*log2(val)
     return e
@@ -112,30 +59,59 @@ def H(classes, total):
 def H2(entropy, probability):
     e = 0
     for key in entropy.iterkeys():
-        # print key
-        # print entropy[key] * probability[key]
         e += entropy[key] * probability[key]
-    # print e
     return e
 
-def choose_attrib(examples, attributes):
+def choose_attrib(examples, attributes, classes, hprior):
     '''
     Returns the best attribute to split on.
     '''
     E = {}          # Single attribute entropies for each classifier
     P = {}          # Probability of classifier
     E2 = {}         # Entropy of two attributes
+    G = {}          # Dictionary of information gain for each attribute
+    Gmax = {}       # Attribute with the largest info gain
     att = {}        # Data samples categorized by a given attribute
     c = {}          # Data samples of att{} categorized by Class
 
     for attribute in attributes:
-        print attribute
-    # for i in range(len(examples)):
-    #     if examples[i][attributes[0]] not in a:
-    #         a[examples[i][attributes[0]]] = []
-    #         a[examples[i][attributes[0]]].append(i)
-    #     else:
-    #         a[examples[i][attributes[0]]].append(i)
+        att = {}                                        # Reset att{} for each attribute loop
+
+    # 1. Create dictionary of all data samples sorted by classifiers
+        for i in range(len(examples)):
+            if examples[i][attribute] not in att:       # Add new classifier if it doesn't already exist
+                att[examples[i][attribute]] = []
+                att[examples[i][attribute]].append(i)
+            else:                                       # Else append sample index to classifier key
+                att[examples[i][attribute]].append(i)
+
+    # 2. Sort each att{} key (y/n/?) by Class (democrat/republican)
+        for classifier in att.iterkeys():
+            c = {}                                      # Reset c{} for each given classifier
+            total = 0
+            for key in classes.iterkeys():              # Find intersect between classes{} and att{}
+                u = [value for value in classes[key] if value in att[classifier]]
+                c[key] = len(u)                         # Add size of intersect to dictionary
+                total += len(u)                         # Keep track of total number of samples
+
+            h = H(c, total)                             # Calculate entropy of c{}
+            E[classifier] = h                           # Add entropy to dictionary E{} for the given attribute
+
+            p = float(total)/len(examples)              # Calculate probability for each classifier
+            P[classifier] = p                           # Add probability to dictionary P{} for given attribute
+
+    # 3. Find information gain for splitting on the given attribute
+        h2 = H2(E, P)                                   # Calculate entropy of two attributes = SUM(P * E)
+        g = hprior - h2                                 # Compute information gain
+        G[attribute] = g                                # Add gain to dictionary G{} for given attribute
+
+    # 4. Find attribute with largest gain value
+    max_gain = max(G.values())
+    for key in G.iterkeys():
+        if G[key] == max_gain:                          # Look for attribute that has matching max_gain value
+            Gmax[key] = max_gain                        # Add key/value pair to single element dictionary Gmax{}
+            break
+    print Gmax
 
 def prune(node, examples):
     '''
