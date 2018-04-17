@@ -15,35 +15,25 @@ def ID3(examples, default):
         return default
     # Else choose the best attribute
     else:
-        # Create dictionary of classes and count how many times they show up
-        # classes = get_classifiers(examples, 'Class')
-        classes = {}
+        classes = {}                                    # Create dictionary of classes and store sample indexes
         for i in range(len(examples)):
             if examples[i]['Class'] not in classes:
-                classes[examples[i]['Class']] = []
-                classes[examples[i]['Class']].append(i)
+                classes[examples[i]['Class']] = []      # Add new key (Class) if it doesn't already exist
+                classes[examples[i]['Class']].append(i) # Append value to list of sample indexes
             else:
                 classes[examples[i]['Class']].append(i)
-        data = {}
+
+        data = {}                                       # Create dictionary that has number of samples in each Class
         for key in classes.iterkeys():
             data[key] = len(classes[key])
-        # print data
-        # print classes['republican']
+        hprior = H(data, len(examples))                 # Calculate entropy of current distribution (Hprior)
 
-        # Initialize Node
-        n = Node()
+        attributes = examples[0].keys()                 # Create array of attributes using a data sample
+        attributes.pop(len(attributes) - 1)             # Remove last attribute (the Class)
 
-        # Calculate entropy of current distribution (Hprior)
-        # H(classes, len(examples))
-        hprior = H(data, len(examples))
-        # print "HPRIOR:",hprior
-
-        # Get list of attributes and choose the best one to split on
-        attributes = examples[0].keys()
-        attributes.pop(len(attributes) - 1)         # Remove last attribute (the Class)
-
-        split = choose_attrib(examples, attributes, classes, hprior)
-        print split
+        # Find best attribute to split on
+        best = choose_attrib(examples, attributes, classes, hprior)
+        print best
 
 def H(classes, total):
     '''
