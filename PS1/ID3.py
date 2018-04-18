@@ -169,10 +169,14 @@ def test(node, examples):
     Takes in a trained tree and a test set of examples. Returns the accuracy (fraction
     of examples the tree classifies correctly).
     '''
+    correct = 0                                         # Initialize counter to keep track of correct classifications
     for i in examples:
         actual = i['Class']                             # Get actual class label
         tested = evaluate(node, i)                      # Get tested class label
-        print actual, tested
+        if actual == tested:
+            correct += 1                                # Increment correct if sample properly classified
+    accuracy = 100*float(correct)/len(examples)         # Calculate accuracy of test
+    return accuracy
 
 def evaluate(node, example):
     '''

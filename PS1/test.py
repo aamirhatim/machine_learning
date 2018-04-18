@@ -8,7 +8,7 @@ def main():
     f = ID3.ID3(e, 'empty')
     # for i in range(10):
     #     print ID3.evaluate(f,e[i])
-    ID3.test(f, e)
+    print ID3.test(f, e)
 
 
 if __name__ == "__main__":
