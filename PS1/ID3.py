@@ -151,12 +151,24 @@ def choose_attribute(examples):
     for key in G.iterkeys():
         if G[key] == max_gain:                          # Look for attribute that has matching max_gain value
             return [key, branches[key]]                 # Return split data samples for the best attribute
+def split(examples, train_size):
+    '''
+    Splits data into training and validation sets based on the given parameters.
+    '''
+    training = []
+    validation = []
+    for i in range(train_size):
+        r = random.int(0,434)
+        training[i] = examples[r]
+    print training
+    # return (training, validation)
 
 def prune(node, examples):
     '''
     Takes in a trained tree and a validation set of examples. Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
+
 
 def test(node, examples):
     '''
