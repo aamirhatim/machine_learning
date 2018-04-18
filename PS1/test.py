@@ -6,7 +6,9 @@ def main():
     e = parse("house_votes_84.data")
     # print len(e)
     f = ID3.ID3(e, 'empty')
-    l = ID3.evaluate(f,e[0])
+    for i in range(10):
+        print ID3.evaluate(f,e[i])
+
 
 if __name__ == "__main__":
     main()
