@@ -11,7 +11,7 @@ def ID3(examples, default):
     Any missing attributes are denoted with a value of "?"
     '''
     if len(examples) == 0:                              # Return default if example set is empty
-        return tree(default)
+        return tree(default, default)
 
     classification = []
     for i in examples:                                  # Otherwise, get classification of all samples
@@ -19,10 +19,10 @@ def ID3(examples, default):
             classification.append(i['Class'])
 
     if len(classification) == 1:                        # Return a tree with label mode(examples) if only one class
-        return tree(mode(examples))
+        return tree(mode(examples), mode(examples))
     else:                                               # Else, choose the best attribute to split data on
         best = choose_attribute(examples)
-        t = tree(best[0])                               # Create tree with label as best attribute
+        t = tree(best[0], mode(examples))                               # Create tree with label as best attribute
         for branch in best[1].iteritems():
             examplesi = []                              # Reset examplesi for every branch
             for i in branch[1]:
@@ -32,12 +32,13 @@ def ID3(examples, default):
 
     return t
 
-def tree(label):
+def tree(label, mode):
     '''
     Creates a new tree with a given label.
     '''
     node = Node()                                       # Create instance of Node
     node.label = label                                  # Add label to new node
+    node.mode = mode                                    # Add Class mode for the node`
     return node
 
 def mode(examples):
@@ -151,6 +152,7 @@ def choose_attribute(examples):
     for key in G.iterkeys():
         if G[key] == max_gain:                          # Look for attribute that has matching max_gain value
             return [key, branches[key]]                 # Return split data samples for the best attribute
+
 def split(examples, train_size):
     '''
     Splits data into training and validation sets based on the given parameters.
@@ -159,22 +161,31 @@ def split(examples, train_size):
     validation = []
     sample_set = []
 
+    # print examples
+
     i = 1
     while i < len(examples) + 1:
         sample_set.append(i)
         i += 1
+    # print sample_set
 
     j = 0
     while j < train_size:
-        r = random.randint(1,435)
-        if not sample_set[r-1] == 0:
-            training.append(examples[r-1])
-            sample_set[r-1] = 0
+        # print "J:",j
+        r = random.randint(0,len(examples)-1)
+        # print "R:",r
+        if not sample_set[r] == 0:
+            training.append(examples[r])
+            sample_set[r] = 0
             j += 1
+    # print sample_set
 
-    for j in sample_set:
-        if not j == 0:
-            validation.append(examples[r-1])
+    for k in sample_set:
+        # print "K:",k
+        if not k == 0:
+            validation.append(examples[k-1])
+            sample_set[k-1] = 0
+    # print sample_set
 
     return (training, validation)
 
@@ -194,6 +205,7 @@ def test(node, examples):
     for i in examples:
         actual = i['Class']                             # Get actual class label
         tested = evaluate(node, i)                      # Get tested class label
+        print actual, tested
         if actual == tested:
             correct += 1                                # Increment correct if sample properly classified
     accuracy = float(correct)/len(examples)             # Calculate accuracy of test
@@ -206,6 +218,8 @@ def evaluate(node, example):
     '''
     if len(node.children) == 0:                         # If node has no children, then it is a leaf
         label = node.label
+    elif not node.children.has_key(example[node.label]):# Return mode of current node if a classifier is not found
+        label = node.mode
     else:
         new_node = node.children[example[node.label]]   # Run evaluate() again with new node
         label = evaluate(new_node, example)
