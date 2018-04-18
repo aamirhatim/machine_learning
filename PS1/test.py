@@ -5,7 +5,7 @@ import unit_tests as tests
 
 def main():
     e = parse("house_votes_84.data")
-    ID3.split(e,10)
+    ID3.split(e,len(e)-1)
     # f = ID3.ID3(e, 'empty')
 
 

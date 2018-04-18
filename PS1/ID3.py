@@ -157,11 +157,26 @@ def split(examples, train_size):
     '''
     training = []
     validation = []
-    for i in range(train_size):
-        r = random.int(0,434)
-        training[i] = examples[r]
-    print training
-    # return (training, validation)
+    sample_set = []
+
+    i = 1
+    while i < len(examples) + 1:
+        sample_set.append(i)
+        i += 1
+
+    j = 0
+    while j < train_size:
+        r = random.randint(1,435)
+        if not sample_set[r-1] == 0:
+            training.append(examples[r-1])
+            sample_set[r-1] = 0
+            j += 1
+
+    for j in sample_set:
+        if not j == 0:
+            validation.append(examples[r-1])
+
+    return (training, validation)
 
 def prune(node, examples):
     '''
