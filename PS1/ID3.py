@@ -10,13 +10,11 @@ def ID3(examples, default):
     and the target class variable is a special attribute with the name "Class".
     Any missing attributes are denoted with a value of "?"
     '''
-    # Return default if example set is empty
-    if len(examples) == 0:
+    if len(examples) == 0:                              # Return default if example set is empty
         return tree(default)
 
-    # Otherwise, get classification of all samples
     classification = []
-    for i in examples:
+    for i in examples:                                  # Otherwise, get classification of all samples
         if i['Class'] not in classification:
             classification.append(i['Class'])
 
