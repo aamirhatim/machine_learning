@@ -160,25 +160,28 @@ def choose_attribute(examples):
 
 def prune(node, examples):
     '''
-    Takes in a trained tree and a validation set of examples.  Prunes nodes in order
+    Takes in a trained tree and a validation set of examples. Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
 
 def test(node, examples):
     '''
-    Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
+    Takes in a trained tree and a test set of examples. Returns the accuracy (fraction
     of examples the tree classifies correctly).
     '''
-
+    for i in examples:
+        actual = i['Class']                             # Get actual class label
+        tested = evaluate(node, i)                      # Get tested class label
+        print actual, tested
 
 def evaluate(node, example):
     '''
-    Takes in a tree and one example.  Returns the Class value that the tree
+    Takes in a tree and one example. Returns the Class value that the tree
     assigns to the example.
     '''
     if len(node.children) == 0:                         # If node has no children, then it is a leaf
         label = node.label
     else:
-        new_node = node.children[example[node.label]]   # run evaluate() again with new node
+        new_node = node.children[example[node.label]]   # Run evaluate() again with new node
         label = evaluate(new_node, example)
     return label
