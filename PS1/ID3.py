@@ -139,8 +139,7 @@ def choose_attribute(examples):
                 u = [value for value in classes[key] if value in att[classifier]]
                 c[key] = len(u)                         # Add size of intersect to dictionary
                 total += len(u)                         # Keep track of total number of samples in ea h Class
-            # print att
-            # print classifier
+
             h = H(c, total)                             # Calculate entropy of c{}
             E[classifier] = h                           # Add entropy to dictionary E{} for the given attribute
 
@@ -152,7 +151,7 @@ def choose_attribute(examples):
         g = hprior - h2                                 # Compute information gain
         G[attribute] = g                                # Add gain to dictionary G{} for given attribute
 
-    # 7. Find attribute with largest gain value
+    # 7. Find attribute with largest information gain
     max_gain = max(G.values())
     for key in G.iterkeys():
         if G[key] == max_gain:                          # Look for attribute that has matching max_gain value
