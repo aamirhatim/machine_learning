@@ -1,3 +1,4 @@
+#!/usr/bin/env python2.7
 import ID3, parse, random
 
 def mini_grader():

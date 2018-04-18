@@ -29,7 +29,6 @@ def ID3(examples, default):
             examplesi = []                              # Reset examplesi for every branch
             for i in branch[1]:
                 examplesi.append(examples[i])           # Create new subset of data samples for next iteration of ID3
-
             subtree = ID3(examplesi, mode(examples))    # Run ID3 algorithm on data subset
             t.children[branch[0]] = subtree             # Add branch to parent Node
 
@@ -95,7 +94,7 @@ def choose_attribute(examples):
     Gmax = {}       # Attribute with the largest info gain
     att = {}        # Data samples categorized by a given attribute
     branches = {}   # Dictionary of possible branches for each attribute, composed of att{} instances
-    c = {}          # Data samples of att{} categorized by Class
+    c = {}          # Number of data samples of att{} categorized by Class
 
     # 1. Create dictionary of classes and store sample indexes
     for i in range(len(examples)):
@@ -116,6 +115,8 @@ def choose_attribute(examples):
 
     for attribute in attributes:
         att = {}                                        # Reset att{} for each attribute loop
+        E = {}                                          # Reset Entropy dictionary
+        P = {}                                          # Reset Probability dictionary
 
     # 4. Create dictionary of all data samples sorted by classifiers
         for i in range(len(examples)):
@@ -134,7 +135,7 @@ def choose_attribute(examples):
             for key in classes.iterkeys():              # Find intersect between classes{} and att{}
                 u = [value for value in classes[key] if value in att[classifier]]
                 c[key] = len(u)                         # Add size of intersect to dictionary
-                total += len(u)                         # Keep track of total number of samples in ea h Class
+                total += len(u)                         # Keep track of total number of samples in each Class
 
             h = H(c, total)                             # Calculate entropy of c{}
             E[classifier] = h                           # Add entropy to dictionary E{} for the given attribute
