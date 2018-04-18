@@ -174,7 +174,7 @@ def test(node, examples):
         tested = evaluate(node, i)                      # Get tested class label
         if actual == tested:
             correct += 1                                # Increment correct if sample properly classified
-    accuracy = 100*float(correct)/len(examples)         # Calculate accuracy of test
+    accuracy = float(correct)/len(examples)             # Calculate accuracy of test
     return accuracy
 
 def evaluate(node, example):
