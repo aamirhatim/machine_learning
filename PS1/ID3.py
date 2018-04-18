@@ -22,12 +22,8 @@ def ID3(examples, default):
 
     if len(classification) == 1:                        # Return a tree with label mode(examples) if only one class
         return tree(mode(examples))
-
-    # Else, choose the best attribute to split data on
-    else:
+    else:                                               # Else, choose the best attribute to split data on
         best = choose_attribute(examples)
-
-        # Create new tree with root at best attribute
         t = tree(best[0])                               # Create tree with label as best attribute
         for branch in best[1].iteritems():
             examplesi = []                              # Reset examplesi for every branch
