@@ -157,24 +157,24 @@ def split(examples, train_size):
     '''
     Splits data into training and validation sets based on the given parameters.
     '''
-    training = []
-    validation = []
-    sample_set = []
+    training = []                                       # Initialize training data set
+    validation = []                                     # Initialize validation data set
+    sample_set = []                                     # Initialize data marker set
 
     i = 1
-    while i < len(examples) + 1:
+    while i < len(examples) + 1:                        # Create array of indexes
         sample_set.append(i)
         i += 1
 
     j = 0
-    while j < train_size:
+    while j < train_size:                               # Randomly pick samples for training set
         r = random.randint(0,len(examples)-1)
         if not sample_set[r] == 0:
             training.append(examples[r])
             sample_set[r] = 0
             j += 1
 
-    for k in sample_set:
+    for k in sample_set:                                # Uses the remaining data to create validation set
         if not k == 0:
             validation.append(examples[k-1])
             sample_set[k-1] = 0
@@ -186,75 +186,55 @@ def prune(node, examples):
     Takes in a trained tree and a validation set of examples. Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
-    results = []
+    results = []                                                    # Initialize array to store accuracy results
     prune_acc = 0
-    pre_prune = test(node, examples)
-    # print "STARTING ACCURACY:", pre_prune
+    pre_prune = test(node, examples)                                # Get accuracy before pruning
 
-    while True:
-        # print "PRE PRUNE:",pre_prune
+    while True:                                                     # Prune tree until accuracy stops improving
+        best_node = None                                            # Initialize best_node result
+        results = prune_tree(node, node, examples, results)         # Get results of a round of pruning
 
-        # Find the best node to prune
-        results = prune_tree(node, node, examples, results)
-        best_node = None
-        # print results
-        for i in results:
+        for i in results:                                           # Find the prune that gives the highest accuracy
             if i['accuracy'] > prune_acc:
                 prune_acc = i['accuracy']
                 best_node = i
-        # print "BEST"
-        # print best_node['child'][0]
-        if best_node == None:
+
+        if best_node == None:                                       # Higher accuracy not found, exit loop
             break
-            # Delete prune_node from the tree if accuracy is better
-        elif prune_acc > pre_prune:
+        elif prune_acc > pre_prune:                                 # Prune from the tree if accuracy is higher
             delete_node(node, best_node)
-            # print "ACCURACY IMPROVED"
         else:
             break
 
-        pre_prune = test(node, examples)
-
-    # print "FINAL ACCURACY:", prune_acc
+        pre_prune = test(node, examples)                            # Re-evaluate pre_pruning accuracy for next round
 
 def prune_tree(node, root, examples, results):
-    if len(node.children) == 0:                             # Stop recursion once a leaf node is hit
+    '''
+    Prunes a node from the input tree (root) using a DFS method.
+    Returns a list of classification performance for each prune.
+    '''
+    if len(node.children) == 0:                                     # Stop recursion once a leaf node is hit
         return results
     else:
         for child in node.children.iteritems():
-            # break
-            prune_tree(child[1], root, examples, results)            # Keep searching for the bottom of the tree
-            # print id(node)
-            # print child
-            temp = child                                    # Temporarily store the given child in temp
-            # print "TEMP:",temp
-            # print "START"
-            # print node.children
-            del node.children[child[0]]                     # Delete the actual child
-            # print "DELETED"
-            # print node.children
-            accuracy = test(root, examples)                  # Run accuracy test on validation set
+            prune_tree(child[1], root, examples, results)           # Keep searching for the bottom of the tree
+            temp = child                                            # Temporarily store the given child in temp
+            del node.children[child[0]]                             # Delete the actual child
+            accuracy = test(root, examples)                         # Run accuracy test on validation set
             results.append({'accuracy':accuracy, 'id':id(node), 'child':temp})
-            node.children[temp[0]] = temp[1]                # Restore child and move onto next node
-            # print "ADDED"
-            # print node.children
-            # print child[1].label
-            # print "PERCENT:",percent
+            node.children[temp[0]] = temp[1]                        # Restore child and move onto next node
     return results
 
 def delete_node(node, prune_node):
-    # print node.children
+    '''
+    Deletes a node from a given tree.
+    '''
     for child in node.children.iteritems():
-        if id(node) == prune_node['id']:
-            # print child
-            # print "ID found"
-            if child[0] == prune_node['child'][0]:
-                # print "CHILD FOUND"
+        if id(node) == prune_node['id']:                            # Look for parent node
+            if child[0] == prune_node['child'][0]:                  # Look for child to delete
                 del node.children[child[0]]
-                # print "DELETED"
-                # print node.children
                 return
-        delete_node(child[1], prune_node)
+        delete_node(child[1], prune_node)                           # Traverse tree if parent node not found
 
 def test(node, examples):
     '''
