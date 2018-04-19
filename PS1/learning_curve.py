@@ -19,18 +19,25 @@ def main():
             acc = ID3.test(tree, validation)                    # Run validation set on tree
             performance += acc
 
-            ID3.prune(tree, validation)                             # Prune the tree
+            ID3.prune(tree, validation)                         # Prune the tree
             acc = ID3.test(tree, validation)                    # Run validation set on pruned tree
             prune_performance += acc
 
-        result.append(performance/100.0)                        # Add average to array for plotting
-        prune_result.append(prune_performance/100.0)
+        result.append(performance)                        # Add average to array for plotting
+        prune_result.append(prune_performance)
         split.append(i)
         i += 100
 
-    plt.plot(split, prune_result)
+    plt.title("Pruned vs. Un-Pruned Decision Tree")
+    plt.plot(split, prune_result, marker = 'o', linestyle = '-', label = 'Pruned', color = 'purple')
     plt.hold(True)
-    plt.plot(split, result)
+    plt.plot(split, result, marker = 'o', linestyle = '-', label = 'Un-pruned', color = 'black')
+    plt.xlabel("Size of Training Data")
+    plt.ylabel("Accuracy (%)")
+    plt.xlim(0,300)
+    plt.ylim(80,100)
+    plt.grid(True)
+    plt.legend(loc = 'upper right')
     plt.show()
 
 if __name__ == "__main__":
