@@ -186,6 +186,30 @@ def prune(node, examples):
     Takes in a trained tree and a validation set of examples. Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
+    # Copy tree
+    t = node
+
+    # Prune a node
+    prune_tree(t, t, examples)
+
+def prune_tree(node, root, examples):
+    if len(node.children) == 0:                             # Stop recursion once a leaf node is hit
+        return
+    else:
+        for child in node.children.iteritems():
+            prune_tree(child[1], root, examples)            # Keep searching for the bottom of the tree
+            temp = child                                    # Temporarily store the given child
+            # print "START"
+            # print node.children
+            del node.children[child[0]]                     # Delete the actual child
+            # print "DELETED"
+            # print node.children
+            percent = test(root, examples)                  # Run accuracy test on validation set
+            node.children[temp[0]] = temp[1]                # Restore child and move onto next node
+            # print "ADDED"
+            # print node.children
+            # print child[1].label
+            print "PERCENT:",percent
 
 
 def test(node, examples):

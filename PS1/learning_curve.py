@@ -1,10 +1,12 @@
 #!/usr/bin/env python2.7
 from parse import parse
 import ID3
+import matplotlib.pyplot as plt
 
 def main():
     e = parse("house_votes_84.data")
-    P = []
+    result = []
+    split = []
 
     i = 10
     while i <= 300:
@@ -15,11 +17,12 @@ def main():
             acc = ID3.test(tree, validation)                    # Run validation set on tree
             performance += acc
 
-        result = performance/100.0                              # Get average accuracy of split
-        P.append((i, result))                                   # Add result to array for plotting
+        result.append(performance/100.0)                        # Add average to array for plotting
+        split.append(i)
         i += 10
 
-    
+    plt.plot(split, result)
+    plt.show()
 
 if __name__ == "__main__":
     main()
