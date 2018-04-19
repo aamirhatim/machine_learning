@@ -14,7 +14,5 @@ def main():
 
     tests.testPruningOnHouseData("house_votes_84.data")
 
-
-
 if __name__ == "__main__":
     main()
