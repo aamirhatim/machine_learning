@@ -11,6 +11,7 @@ def main():
 
     i = 10
     while i <= 300:
+        print "Plotting:",i,"training size"
         performance = 0
         prune_performance = 0
         for j in range(100):
@@ -23,11 +24,12 @@ def main():
             acc = ID3.test(tree, validation)                    # Run validation set on pruned tree
             prune_performance += acc
 
-        result.append(performance)                        # Add average to array for plotting
+        result.append(performance)                              # Add average to array for plotting
         prune_result.append(prune_performance)
         split.append(i)
-        i += 100
+        i += 10
 
+    # Plot the results
     plt.title("Pruned vs. Un-Pruned Decision Tree")
     plt.plot(split, prune_result, marker = 'o', linestyle = '-', label = 'Pruned', color = 'purple')
     plt.hold(True)

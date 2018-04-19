@@ -197,7 +197,7 @@ def prune(node, examples):
         # Find the best node to prune
         results = prune_tree(node, node, examples, results)
         best_node = None
-        print results
+        # print results
         for i in results:
             if i['accuracy'] > prune_acc:
                 prune_acc = i['accuracy']
