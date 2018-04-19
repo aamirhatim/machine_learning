@@ -189,24 +189,32 @@ def prune(node, examples):
     results = []
     prune_acc = 0
     pre_prune = test(node, examples)
-    print pre_prune
+    print "STARTING ACCURACY:", pre_prune
 
-    # Find the best node to prune
-    results = prune_tree(node, node, examples, results)
-    for i in results:
-        if i['accuracy'] > prune_acc:
-            prune_acc = i['accuracy']
-            best_node = i
-    print "BEST"
-    print best_node['child'][0]
+    while True:
+        # print "PRE PRUNE:",pre_prune
 
-    # Delete prune_node from the tree if accuracy is better
-    if prune_acc > pre_prune:
-        print "PRUNING"
-        delete_node(node, best_node)
+        # Find the best node to prune
+        results = prune_tree(node, node, examples, results)
+        best_node = None
+        for i in results:
+            if i['accuracy'] > prune_acc:
+                prune_acc = i['accuracy']
+                best_node = i
+        # print "BEST"
+        # print best_node['child'][0]
+        if best_node == None:
+            break
+            # Delete prune_node from the tree if accuracy is better
+        elif prune_acc > pre_prune:
+            delete_node(node, best_node)
+            print "ACCURACY IMPROVED"
+        else:
+            break
 
-    print test(node, examples)
-
+        pre_prune = test(node, examples)
+        
+    print "FINAL ACCURACY:", prune_acc
 
 def prune_tree(node, root, examples, results):
     if len(node.children) == 0:                             # Stop recursion once a leaf node is hit
@@ -242,13 +250,10 @@ def delete_node(node, prune_node):
             if child[0] == prune_node['child'][0]:
                 # print "CHILD FOUND"
                 del node.children[child[0]]
-                print "DELETED"
+                # print "DELETED"
                 # print node.children
                 return
         delete_node(child[1], prune_node)
-
-
-
 
 def test(node, examples):
     '''
