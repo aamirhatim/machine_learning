@@ -186,30 +186,68 @@ def prune(node, examples):
     Takes in a trained tree and a validation set of examples. Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
-    # Copy tree
-    t = node
+    results = []
+    prune_acc = 0
+    pre_prune = test(node, examples)
+    print pre_prune
 
-    # Prune a node
-    prune_tree(t, t, examples)
+    # Find the best node to prune
+    results = prune_tree(node, node, examples, results)
+    for i in results:
+        if i['accuracy'] > prune_acc:
+            prune_acc = i['accuracy']
+            best_node = i
+    print "BEST"
+    print best_node['child'][0]
 
-def prune_tree(node, root, examples):
+    # Delete prune_node from the tree if accuracy is better
+    if prune_acc > pre_prune:
+        print "PRUNING"
+        delete_node(node, best_node)
+
+    print test(node, examples)
+
+
+def prune_tree(node, root, examples, results):
     if len(node.children) == 0:                             # Stop recursion once a leaf node is hit
         return
     else:
         for child in node.children.iteritems():
-            prune_tree(child[1], root, examples)            # Keep searching for the bottom of the tree
-            temp = child                                    # Temporarily store the given child
+            # break
+            prune_tree(child[1], root, examples, results)            # Keep searching for the bottom of the tree
+            # print id(node)
+            # print child
+            temp = child                                    # Temporarily store the given child in temp
+            # print "TEMP:",temp
             # print "START"
             # print node.children
             del node.children[child[0]]                     # Delete the actual child
             # print "DELETED"
             # print node.children
-            percent = test(root, examples)                  # Run accuracy test on validation set
+            accuracy = test(root, examples)                  # Run accuracy test on validation set
+            results.append({'accuracy':accuracy, 'id':id(node), 'child':temp})
             node.children[temp[0]] = temp[1]                # Restore child and move onto next node
             # print "ADDED"
             # print node.children
             # print child[1].label
-            print "PERCENT:",percent
+            # print "PERCENT:",percent
+    return results
+
+def delete_node(node, prune_node):
+    # print node.children
+    for child in node.children.iteritems():
+        if id(node) == prune_node['id']:
+            # print child
+            # print "ID found"
+            if child[0] == prune_node['child'][0]:
+                # print "CHILD FOUND"
+                del node.children[child[0]]
+                print "DELETED"
+                # print node.children
+                return
+        delete_node(child[1], prune_node)
+
+
 
 
 def test(node, examples):
