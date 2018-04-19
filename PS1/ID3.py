@@ -189,7 +189,7 @@ def prune(node, examples):
     results = []
     prune_acc = 0
     pre_prune = test(node, examples)
-    print "STARTING ACCURACY:", pre_prune
+    # print "STARTING ACCURACY:", pre_prune
 
     while True:
         # print "PRE PRUNE:",pre_prune
@@ -197,6 +197,7 @@ def prune(node, examples):
         # Find the best node to prune
         results = prune_tree(node, node, examples, results)
         best_node = None
+        print results
         for i in results:
             if i['accuracy'] > prune_acc:
                 prune_acc = i['accuracy']
@@ -208,17 +209,17 @@ def prune(node, examples):
             # Delete prune_node from the tree if accuracy is better
         elif prune_acc > pre_prune:
             delete_node(node, best_node)
-            print "ACCURACY IMPROVED"
+            # print "ACCURACY IMPROVED"
         else:
             break
 
         pre_prune = test(node, examples)
-        
-    print "FINAL ACCURACY:", prune_acc
+
+    # print "FINAL ACCURACY:", prune_acc
 
 def prune_tree(node, root, examples, results):
     if len(node.children) == 0:                             # Stop recursion once a leaf node is hit
-        return
+        return results
     else:
         for child in node.children.iteritems():
             # break

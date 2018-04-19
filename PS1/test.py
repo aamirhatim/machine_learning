@@ -12,6 +12,8 @@ def main():
     # print ID3.test(f, validation)
     ID3.prune(f, validation)
 
+    tests.testPruningOnHouseData("house_votes_84.data")
+
 
 
 if __name__ == "__main__":
