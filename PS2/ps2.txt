@@ -1,0 +1,4 @@
+1.
+The "alcohol" attribute looks to be the most useful as it seems to separate the good and bad wines along either end of the spectrum compared to the other histograms. Most other attributes have fairly similar distributions, but the "alcohol" attribute shows a higher concentration of "bad" wine on the left and more "good" wines on the right.
+
+2.
