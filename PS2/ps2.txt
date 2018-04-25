@@ -2,3 +2,22 @@
 The "alcohol" attribute looks to be the most useful as it seems to separate the good and bad wines along either end of the spectrum compared to the other histograms. Most other attributes have fairly similar distributions, but the "alcohol" attribute shows a higher concentration of "bad" wine on the left and more "good" wines on the right.
 
 2.
+ZeroR has an accuracy of 62.381%. ZeroR simply predicts the majority class in a set of data and ignores any other attributes. This is useful for evaluating other classifiers because you can see its actual performance gain compared to just doing a majority vote. For example, if ZeroR output an accuracy of 95% and your own classifier had an accuracy of 95.5%, the classifier probably isn't very useful since there is not much improvement from ZeroR.
+
+3.
+Looking at the output tree, "alcohol" is the most informative split, which is the same attribute predicted in question 1.
+
+4.
+Accuracy using "Use training set" option: 95.873%
+Accuracy using "Cross-validation" option with 10 folds: 85.9788%
+Cross-validation essentially bins the entire data set into an x number of folds. One fold is used for validation and the rest are used for training. A 10-fold cross-validation method splits the data into ten bins, uses 9 of them for training, and then uses the last one for validation. This process is repeated so that each bin is eventually used as a validation set and the accuracy from each trial is compared and averaged to produce the total accuracy of the classifier.
+The main reason the accuracy of this method is lower than the accuracy of using the whole training set is because we simply have less data to make a more robust classifier. The classifier may also be overfitting the data since it is using the whole dataset as the training set.
+This is very useful to indicate how well the classifier will perform on new data since cross-validation can simulate it by using different training and validation sets.
+
+5.
+The Random Forest classifier seems to give the best performance with and accuracy of 90.582% using 10-fold cross validation. The command line entry is <RandomForest -P 100 -I 100 -num-slots 1 -K 0 -M 1.0 -V 0.001 -S 1 -B>
+
+6.
+I was not familiar with most of the strategies mentioned, so I used a brute force method of trial and error to choose the best classifier. I ran 10-fold cross validation as well as varying percentage-split tests to compare the accuracy on the validation set. After the best result was found, I then changed the parameters within the classifier to see if I could further improve its accuracy.
+
+7.
