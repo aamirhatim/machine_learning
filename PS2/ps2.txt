@@ -1,3 +1,8 @@
+Aamir Husain
+EECS 349: Machine Learning
+Problem Set 2
+
+
 1.
 The "alcohol" attribute looks to be the most useful as it seems to separate the good and bad wines along either end of the spectrum compared to the other histograms. Most other attributes have fairly similar distributions, but the "alcohol" attribute shows a higher concentration of "bad" wine on the left and more "good" wines on the right.
 
@@ -21,3 +26,17 @@ The Random Forest classifier seems to give the best performance with and accurac
 I was not familiar with most of the strategies mentioned, so I used a brute force method of trial and error to choose the best classifier. I ran 10-fold cross validation as well as varying percentage-split tests to compare the accuracy on the validation set. After the best result was found, I then changed the parameters within the classifier to see if I could further improve its accuracy.
 
 7.
+The two classifiers used were AdaBoostM1 <AdaBoostM1 -P 100 -S 1 -I 10 -W weka.classifiers.trees.DecisionStump> and RandomForest <RandomForest -P 100 -I 100 -num-slots 1 -K 0 -M 1.0 -V 0.001 -S 1 -B>. The results for 10-fold cross validation are as follows:
+AdaBoostM1(wine)    = 81.640%
+AdaBoostM1(car)     = 70.504%
+RandomForest(wine)  = 90.582%
+RandomForest(car)   = 93.193%
+
+Using the formula in the homework: 81.640 + 93.193 - 90.582 - 70.504 = 13.747
+These classifiers were chosen using the same approach as in question 6.
+
+8.
+f1(x): 1-NN. Because there seems to be distinct areas of positive and negative, using 1-NN would be good for this dataset. Using more neighbors may lead to generalizing new data points to a potentially wrong classification.
+f2(x): Linear. The outputs follow a fairly linear path, with a little bit of noise for a couple of the data points.
+f3(x): Polynomial. The outputs of this function could be a noisy set of linear relationships, but assuming the data is fairly clean, a polynomial classifier seems to suit this data better and yield a lower sum square error.
+f4(x): 3-NN. The negative output of f4(4) in this data set looks like it is noise or bad data, mainly because the outputs for all other inputs are positive. For that reason 3-NN makes sense to use since using 1-NN may give more weight to noisy data.
