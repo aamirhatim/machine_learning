@@ -1,4 +1,13 @@
 *.pdf
 *.zip
-PS3/minimal-nn/*
-
+PS3/minimal-nn/data
+PS3/minimal-nn/README.md
+PS3/minimal-nn/*.png
+PS3/minimal-nn/check_grad.p*
+PS3/minimal-nn/get_mnist_data.py
+PS3/minimal-nn/mnist.p*
+PS3/minimal-nn/mnist_experiment.p*
+PS3/minimal-nn/__pycache__
+PS3/minimal-nn/test_fnn.py
+PS3/minimal-nn/toy_dataset.json
+PS3/minimal-nn/fnn.pyc
