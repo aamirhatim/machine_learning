@@ -98,5 +98,3 @@ def captions():
 
     txt_pixel.close()                                       # Close files
     txt_vgg.close()
-
-captions()
