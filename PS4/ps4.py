@@ -1,32 +1,31 @@
 #!/usr/bin/env python2.7
 import numpy as np
 import json
-import sys
 
 def normalize(matrix):
-    squared = matrix**2                         # Square elements
-    sums = np.sum(squared)                      # Sum all elements
+    squared = matrix**2                                     # Square elements
+    sums = np.sum(squared)                                  # Sum all elements
     norm = np.sqrt(sums)
     return norm
 
 def cosine_sim(a1, a2):
-    dot = np.dot(a1.T, a2)                      # Compute dot product of vectors
+    dot = np.dot(a1.T, a2)                                  # Compute dot product of vectors
 
-    mag1 = normalize(a1)                        # Compute magnitutdes of vectors
+    mag1 = normalize(a1)                                    # Compute magnitutdes of vectors
     mag2 = normalize(a2)
 
-    sim = dot/(mag1*mag2)                       # Calculate similarity
+    sim = dot/(mag1*mag2)                                   # Calculate similarity
     return sim
 
 def img_compare():
-    with open('cnn_dataset.json') as f:                 # Load dataset
+    with open('cnn_dataset.json') as f:                     # Load dataset
         data = json.load(f)
 
-    mj1_pixel = np.array(data['pixel_rep']['mj1'])      # Separate image data for pixel_rep
+    mj1_pixel = np.array(data['pixel_rep']['mj1'])          # Separate image data for pixel_rep
     mj2_pixel = np.array(data['pixel_rep']['mj2'])
     cat_pixel = np.array(data['pixel_rep']['cat'])
 
-    mj1_vgg = np.array(data['vgg_rep']['mj1'])          # Separate image data for vgg_rep
+    mj1_vgg = np.array(data['vgg_rep']['mj1'])              # Separate image data for vgg_rep
     mj2_vgg = np.array(data['vgg_rep']['mj2'])
     cat_vgg = np.array(data['vgg_rep']['cat'])
 
@@ -76,8 +75,9 @@ def find_neighbor(test_name, train, images, captions, pixel, vgg):
     return best_pixel, best_vgg
 
 def captions():
-    with open('dataset.json') as f:
+    with open('dataset.json') as f:                         # Load JSON file
         data = json.load(f)
+
     train = data['train']                                   # File names of training images
     test = data['test']                                     # File names of test images
     images = data['images']                                 # File names of all images
