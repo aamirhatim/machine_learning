@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 import numpy as np
 import json
+import sys
 
 def normalize(matrix):
     squared = matrix**2                         # Square elements
@@ -84,18 +85,18 @@ def captions():
     pixel = np.load('pixel_rep.npy')                        # Load pixel and vgg representations of images
     vgg = np.load('vgg_rep.npy')
 
+    txt_pixel = open('pixel.txt','w')                       # Open txt files for export
+    txt_vgg = open('vgg.txt','w')
+
     for i in test:
         # Find nearest neighbor uing cosine similarity
         neighbor_pixel, neighbor_vgg = find_neighbor(i, train, images, captions, pixel, vgg)
 
-        # Find caption of neighbor
-        caption_predict = captions[neighbor_pixel['name']]
-        print 'PREDICTED CAPTION:',caption_predict
+        # Find caption of neighbor and write it to txt file
+        print >>txt_pixel, captions[neighbor_pixel['name']]
+        print >>txt_vgg, captions[neighbor_vgg['name']]
 
-        # Find actual caption
-        caption_actual = captions[i]
-        # print 'ACTUAL CAPTION:',caption_actual
-
-
+    txt_pixel.close()                                       # Close files
+    txt_vgg.close()
 
 captions()
