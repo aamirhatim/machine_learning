@@ -3,14 +3,14 @@ from ps4 import cosine_sim
 import json
 import numpy as np
 
-with open('cnn_dataset.json') as f:
+with open('cnn_dataset.json') as f:                 # Load dataset
     data = json.load(f)
 
-mj1_pixel = np.array(data['pixel_rep']['mj1'])
+mj1_pixel = np.array(data['pixel_rep']['mj1'])      # Separate image data for pixel_rep
 mj2_pixel = np.array(data['pixel_rep']['mj2'])
 cat_pixel = np.array(data['pixel_rep']['cat'])
 
-mj1_vgg = np.array(data['vgg_rep']['mj1'])
+mj1_vgg = np.array(data['vgg_rep']['mj1'])          # Separate image data for vgg_rep
 mj2_vgg = np.array(data['vgg_rep']['mj2'])
 cat_vgg = np.array(data['vgg_rep']['cat'])
 
