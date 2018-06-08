@@ -15,3 +15,4 @@ PS4/cnn_dataset.json
 PS4/dataset.json
 PS4/images/*
 PS4/*.npy
+PS4/*.csv
