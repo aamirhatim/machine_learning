@@ -41,7 +41,7 @@ def img_compare():
     print 'mj2-cat:',cosine_sim(mj2_vgg, cat_vgg)
 
 def find_neighbor(test_name, train, images, captions, pixel, vgg):
-    # test_name = test[0]                                   # Start by finding similarity to first image in training set
+    # Start by finding similarity to first image in training set
     test_ind = images.index(test_name)                      # Get index of test image in the images set
     train_ind = images.index(train[0])                      # Get index of training image in the images set
 
@@ -55,7 +55,8 @@ def find_neighbor(test_name, train, images, captions, pixel, vgg):
     sim = cosine_sim(vgg_test, vgg_train)                   # Compute baseline similarity for vgg rep
     best_vgg = {'name':train[0], 'similarity':sim}          # Initialize best vgg value for comparison with rest of the training set
 
-    for i in range(len(train)-1):                           # Cycle through remainder of training set
+    # Cycle through remainder of training set
+    for i in range(len(train)-1):
         train_ind = images.index(train[i+1])                # Get index
 
         pixel_train = pixel[train_ind]                      # Get pixel representations
